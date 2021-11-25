@@ -1,0 +1,45 @@
+Example folder for DD-SGCMC calculation
+
+Contents:
+	
+	inlammps_A.lmp & inlammps_B.lmp - LAMMPS input files for each replica
+
+	log.mc - MC calculation output. Data is output here every 10 MC steps. Column values are defined as follows:
+	(1) Current MC step
+	(2) Energy of replica 1 before latest trial move
+    (3) Energy of replica 2 before latest trial move
+    (4) Energy of replica 1 after latest trial move
+    (5) Energy of replica 2 after latest trial move
+    (6) Energy difference at replica 1 due to trial move ( column 4 - column 2 )
+    (7) Energy difference at replica 2 due to trial move ( column 4 - column 2 )
+	(8) Number of rejections since last accepted trial move
+    (9) Type of atom chosen from replica 1
+	(10) Type of atom chosen from replica 2
+    (11) Trial move flag:   1 - particle exchange between replicas
+                            2 - particle exchange within replica 1
+                            3 - particle exchange within replica 2
+
+	stderr - output used for debugging
+	stdout - output used for debugging
+
+	dump - dump .cfg.gz files are written here
+
+	log.lammps.0 - LAMMPS output file (replica 1)
+	log.lammps.1 - LAMMPS output file (replica 2)
+
+	mc.ctl - Definition of variables relevant to the MC calculation. These variables are defined as follows:
+	(1) TEMP - Annealing temperature
+	(2) C0 - Element concentration. For an n-nary system, only n-1 values need to be defined (concentration of first element is the complement)
+	(3) NINI - Initial MC step (used when restarting simulation)
+	(4) NITR - Maximum number of MC exchanges
+	(5) NOUT - dump data is output every NOUT steps
+	(6) LREJ - Number of maximum consecutive rejections before simulation is stopped
+	(7) NELM - Number of elements in system
+	(8) element X Y Z - X, Y, Z,... are element symbols
+	(9) NDBS - Number of datapoints in each database must be less than NDBS
+
+	NiCoCr_tiny.lmp - test atomic system
+
+	run.sh - Run script.
+
+	

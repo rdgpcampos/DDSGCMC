@@ -1,0 +1,21 @@
+units		metal
+boundary	p p p
+atom_style	atomic
+atom_modify map array
+
+
+read_data  NiCoCr_tiny.lmp
+variable    potfile index '../NiCoCr.lammps.eam'
+pair_style eam/alloy
+pair_coeff * * ${potfile} Ni Co Cr
+
+variable mu1 equal 0.0
+variable mu2 equal 0.0
+variable mu3 equal 0.0
+
+# If using NPT ensemble, structural relaxation at the beginning of the simulation is not necessary
+ 
+#min_style cg
+#fix 1 all box/relax iso 0.0 
+#minimize 1.0e-6 0.0 100000 100000
+#unfix 1

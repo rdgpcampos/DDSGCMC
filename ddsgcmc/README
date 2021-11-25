@@ -1,0 +1,10 @@
+This directory contains the directories for each calculation step of the DD-SGCMC method.
+Energy sampling: energy_sampling
+Database construction: dist_data
+DD-SGCMC calculation: dd_sgcmc
+Furthermore, the example system included here was tested with the EAM potential developed
+by Q.J. Li, H.W. Sheng, and E. Ma in 2019 and can be downloaded from the link below:
+
+https://sites.google.com/site/eampotentials/Home/NiCoCr
+
+Storing the NiCoCr.lammps.eam file in this directory will enable the example simulation.

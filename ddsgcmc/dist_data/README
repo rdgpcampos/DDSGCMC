@@ -1,0 +1,9 @@
+This directory contains the scripts used to build the energy databases from the energy data
+of the energy change sampling simulation. A more detailed description of the database construction
+process is given in [1]. The first step is to run the script sort_sample.sh, which collects 
+energy data from ../energy_sampling/log.mc and sorts it according to the atom types being exchanged.
+This generates the files sampleXtoY.dat, which contain the raw energy data for each type of exchange.
+These files are then processed by mkdb.py using the following command:
+    $python mkdb.py [n]
+where n is the number of atom types in the energy sampling simulation. This will generate the
+energy databases used in the DD-SGCMC method. 

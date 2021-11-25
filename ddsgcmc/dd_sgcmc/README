@@ -1,0 +1,47 @@
+Example folder for DD-SGCMC calculation
+
+Contents:
+	
+	dErsv_XtoY.dat - Energy database containing energy change probability distribution for when an atom
+	X is exchange for an atom Y in a large reservoir (replica). This data is divided into three columns,
+	which contain respectively (1) the energy values with increments of 0.001 eV, (2) the probability of
+	obtaining that particular energy value after an X->Y atomic exchange at the reservoir, and (3) the 
+	cumulative value of the probability
+
+	inlammps - LAMMPS input file
+
+	log.mc - MC calculation output. Data is output here every 10 MC steps. Column values are defined as follows:
+	(1) Current MC step
+	(2) Current energy
+	(3) Energy of the system obtained after the latest MC trial move
+	(4) Energy difference due to trial move ( column 3 - column 2 )
+	(5) Number of rejections since last accepted trial move
+	(6) ID of exchanged atom (During MC calculation, atom IDs are not changed, only their "type" property)
+	(7) Atom type before trial move
+	(8) Atom type after trial move
+
+	screen.0 - LAMMPS output file
+
+	stderr - output used for debugging
+	stdout - output used for debugging
+
+	dump - dump .cfg.gz files are written here
+
+	log.lammps.0 - LAMMPS output file
+
+	mc.ctl - Definition of variables relevant to the MC calculation. These variables are defined as follows:
+	(1) TEMP - Annealing temperature
+	(2) C0 - Element concentration. For an n-nary system, only n-1 values need to be defined (concentration of first element is the complement)
+	(3) NINI - Initial MC step (used when restarting a simulation)
+	(4) NITR - Maximum number of MC exchanges
+	(5) NOUT - dump data is output every NOUT steps
+	(6) LREJ - Number of maximum consecutive rejections before simulation is stopped
+	(7) NELM - Number of elements in system
+	(8) element X Y Z - X, Y, Z,... are element symbols
+	(9) NDBS - Number of datapoints in each database must be less than NDBS
+
+	NiCoCr_tiny.lmp - test atomic system
+
+	run.sh - Run script.
+
+	
