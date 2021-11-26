@@ -17,12 +17,13 @@ int main(int narg, char **arg)
 {
 
     if (narg != 4) {
-        printf("Syntax: npar N in.lammps mc.ctl\n");
+        printf("Syntax: npar N in.lammps mc.ctl rnd_seed\n");
         exit(1);
     }
 
     char *infile = arg[2];
     char *mc_ctl = arg[3];
+    char *rnd_seed = arg[4];
 
     // Initial settings here
     MCVars mc;
@@ -149,7 +150,7 @@ fprintf(stderr,"Database loaded\n");
     int cnt = 0;
     // random variables settings
     //std::random_device rnd; // device dependent random variable
-    unsigned rnd = 314159265; // fixed root random seed
+    unsigned rnd = static_cast<unsigned>(*rnd_seed);
     unsigned seed = rnd;
     std::mt19937 mt(seed);
     std::mt19937 mt_prob(seed+1);
