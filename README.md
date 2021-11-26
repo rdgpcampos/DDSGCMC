@@ -9,6 +9,10 @@ The source codes used in this method can be accessed in the source directory, wh
 located in the ddsgcmc directory. Note that to run the NiCoCr example, first the NiCoCr.lammps.eam potential <br/>
 needs to be included in the ./ddsgcmc directory (See the README file in the same directory).<br/>
 
+These scripts were tested with the stable 12th of December of 2018 version of LAMMPS. Before using them, modify the path to<br/>
+the LAMMPS src files in source/Makefile (INC_PATH and LIB_PATH). It is also necessary to modify the same path in the run.sh scripts<br/>
+in /ddsgcmc/dd_sgcmc and /ddsgcmc/energy_sampling before running either of these calculations.
+
 Contact the authors for more information or comments regarding this method:<br/>
 
 rdgpcampos@tsme.me.es.osaka-u.ac.jp
