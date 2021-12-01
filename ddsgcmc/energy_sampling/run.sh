@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BIN=../../source/db
+BIN=../../src/db
 
 INP=inlammps
 MCT=mc.ctl
