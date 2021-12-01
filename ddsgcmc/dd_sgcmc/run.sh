@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BIN=../../source/dd
+BIN=../../src/dd
 
 INP=inlammps
 N=1
