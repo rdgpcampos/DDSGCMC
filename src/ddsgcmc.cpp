@@ -336,6 +336,16 @@ fprintf(stderr,"Database loaded\n");
                 	lmp->input->one(dumpstr);
               	}
       	    }
+            
+            if(mc.nrestart>0 && !(cnt%mc.nrestart))
+            {
+                if(instance==0)
+                {
+                    char dumpstr[BUFSIZ];
+                    sprintf(dumpstr,"write_restart MCrestart.%d",cnt);
+                    lmp->input->one(dumpstr);
+                }
+            }
 
             // if accept, update structure
             if(acc==1)

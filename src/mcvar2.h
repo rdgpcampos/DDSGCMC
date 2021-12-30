@@ -22,6 +22,7 @@ class MCVars {
         double c0;
         int nstart,niter,nout,rej_limit,ntype;
         int nMDinit,nMDmc;
+        int nrestart;
         double beta;
         char *mod1;  // label for dump command
         char *mod2;  // label for dump command
@@ -53,6 +54,7 @@ MCVars::MCVars()
     nMDmc = 500;
     irestart = 0;
     isRestart = false;
+    nrestart = 0;
     str = new char[BUFSIZ];
 
     dbfile = new char[BUFSIZ];
@@ -107,6 +109,7 @@ void MCVars::read_ctl(char* ctlfile)
         if(strstr(str,"NMD0") !=NULL) sscanf(str,"%*s %*s %d", &nMDinit);
         if(strstr(str,"NMD1") !=NULL) sscanf(str,"%*s %*s %d", &nMDmc);
         if(strstr(str,"IRST") !=NULL) sscanf(str,"%*s %*s %d", &irestart);
+        if(strstr(str,"NRST") !=NULL) sscanf(str,"%*s %*s %d", &nrestart);
 
 //        if(strstr(str,"element") !=NULL) sscanf(str,"%s",mod2);
         if(strstr(str,"element") !=NULL) memcpy(mod2,str,BUFSIZ);
