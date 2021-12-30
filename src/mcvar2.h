@@ -12,6 +12,8 @@ class MCVars {
         const double kb = 8.617333262e-5;
         //const int Ncum = 100; // readable value in the future
         //int Ncum;
+        bool isRestart;
+        int irestart;
         int split_str(char str[],char **dcp);
     public:
         MCVars();
@@ -49,6 +51,8 @@ MCVars::MCVars()
     Ncum=0;
     nMDinit = 1000;
     nMDmc = 500;
+    irestart = 0;
+    isRestart = false;
     str = new char[BUFSIZ];
 
     dbfile = new char[BUFSIZ];
@@ -102,6 +106,7 @@ void MCVars::read_ctl(char* ctlfile)
         if(strstr(str,"NDBS") !=NULL) sscanf(str,"%*s %*s %d", &Ncum);
         if(strstr(str,"NMD0") !=NULL) sscanf(str,"%*s %*s %d", &nMDinit);
         if(strstr(str,"NMD1") !=NULL) sscanf(str,"%*s %*s %d", &nMDmc);
+        if(strstr(str,"IRST") !=NULL) sscanf(str,"%*s %*s %d", &irestart);
 
 //        if(strstr(str,"element") !=NULL) sscanf(str,"%s",mod2);
         if(strstr(str,"element") !=NULL) memcpy(mod2,str,BUFSIZ);
@@ -154,6 +159,16 @@ void MCVars::read_ctl(char* ctlfile)
     {
         fprintf(stderr,"Warning: Number of MD step must be 0 or positive. Using default NMD1 value...\n");
         nMDmc = nMDmc_default;
+    }
+
+    // restart flag
+    if(irestart>0)
+    {
+        isRestart = true;
+        fprintf(stderr,"Notice: Restart flag is set to TRUE.\n");
+    }else{
+        isRestart = false;
+        fprintf(stderr,"Notice: Restart flag is set to FALSE.\n");
     }
 
     // set solute concentration
