@@ -230,7 +230,8 @@ fprintf(stderr,"Database loaded\n");
     lmp->input->one(command2);
 
     lmp->input->one("fix mom all momentum 50 linear 1 1 1 angular rescale");
-    lmp->input->one("run 1000");
+    sprintf(command1,"run %d",mc.nMDinit);
+    lmp->input->one(command1);
     lmp->input->one("unfix nf");
 
     char restart_command[128];
@@ -253,8 +254,9 @@ fprintf(stderr,"Database loaded\n");
             break;
         }
 //-------------------------------------- Continue MD run ----------------------------------------
-	    lammps_scatter_atoms(lmp,(char *) "v",1,3,v);	
-	    lmp->input->one("run 500");
+	    lammps_scatter_atoms(lmp,(char *) "v",1,3,v);
+        sprintf(command1,"run %d",mc.nMDmc);	
+	    lmp->input->one(command1);
 	    lammps_gather_atoms(lmp,(char *) "v",1,3,v);
 //-----------------------------------------------------------------------------------------------
         

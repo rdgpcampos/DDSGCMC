@@ -19,6 +19,7 @@ class MCVars {
         double temp;
         double c0;
         int nstart,niter,nout,rej_limit,ntype;
+        int nMDinit,nMDmc;
         double beta;
         char *mod1;  // label for dump command
         char *mod2;  // label for dump command
@@ -46,6 +47,8 @@ MCVars::MCVars()
     rej_limit=1000;
     ntype=0;
     Ncum=0;
+    nMDinit = 1000;
+    nMDmc = 500;
     str = new char[BUFSIZ];
 
     dbfile = new char[BUFSIZ];
@@ -67,6 +70,9 @@ MCVars::~MCVars()
 
 void MCVars::read_ctl(char* ctlfile)
 {
+    int nMDinit_default = nMDinit;
+    int nMDmc_default = nMDmc;
+
     FILE *fp;
 
     if((fp=fopen(ctlfile,"r"))==NULL)
@@ -94,6 +100,8 @@ void MCVars::read_ctl(char* ctlfile)
         if(strstr(str,"LREJ") !=NULL) sscanf(str,"%*s %*s %d", &rej_limit);
         if(strstr(str,"NELM") !=NULL) sscanf(str,"%*s %*s %d", &ntype);
         if(strstr(str,"NDBS") !=NULL) sscanf(str,"%*s %*s %d", &Ncum);
+        if(strstr(str,"NMD0") !=NULL) sscanf(str,"%*s %*s %d", &nMDinit);
+        if(strstr(str,"NMD1") !=NULL) sscanf(str,"%*s %*s %d", &nMDmc);
 
 //        if(strstr(str,"element") !=NULL) sscanf(str,"%s",mod2);
         if(strstr(str,"element") !=NULL) memcpy(mod2,str,BUFSIZ);
@@ -135,6 +143,18 @@ void MCVars::read_ctl(char* ctlfile)
         delete [] cstr;
 		throw str;
 	}
+
+    // MD steps error
+    if(nMDinit<0)
+    {
+        fprintf(stderr,"Warning: Number of MD step must be 0 or positive. Using default NMD0 value...\n");
+        nMDinit = nMDinit_default;
+    }
+    if(nMDmc<0)
+    {
+        fprintf(stderr,"Warning: Number of MD step must be 0 or positive. Using default NMD1 value...\n");
+        nMDmc = nMDmc_default;
+    }
 
     // set solute concentration
     for(int i=0;i<ntype-1;i++) sscanf(dcp[i+2],"%lf",&clist[i+1]);
