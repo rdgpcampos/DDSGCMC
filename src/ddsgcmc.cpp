@@ -225,11 +225,17 @@ fprintf(stderr,"Database loaded\n");
         sprintf(command1,"velocity all create %.1f %5d rot yes mom yes dist gaussian",mc.temp,46242);
         lmp->input->one(command1);
 
-        double *press1 = (double *) lammps_extract_compute(lmp,(char *) "thermo_press",0,0);
-        double p0 = *press1;
-        if(me==0) fprintf(stderr,"Initial pressure: %.2f\n",p0);
-        press1=NULL;
-        sprintf(command2,"fix nf all nvt temp %.1f %.1f 1",mc.temp,mc.temp); // Needs to be the same setting as the one used during DB construction
+        if(mc.ensemble == 1)
+        {
+            double *press1 = (double *) lammps_extract_compute(lmp,(char *) "thermo_press",0,0);
+            double p0 = *press1;
+            if(me==0) fprintf(stderr,"Initial pressure: %.2f\n",p0);
+            press1=NULL;
+            sprintf(command2,"fix nf all npt temp %.1f %.1f 0.1 iso %.2f %.1f 1.0",mc.temp,mc.temp,p0,0.0);
+        }else
+        {
+            sprintf(command2,"fix nf all nvt temp %.1f %.1f 1",mc.temp,mc.temp); // Needs to be the same setting as the one used during DB construction
+        }
         lmp->input->one(command2);
 
         lmp->input->one("fix mom all momentum 50 linear 1 1 1 angular rescale");
@@ -239,7 +245,13 @@ fprintf(stderr,"Database loaded\n");
     }
 
     char restart_command[128];
-    sprintf(restart_command,"fix nf all nvt temp %.1f %.1f 0.1",mc.temp,mc.temp);
+    if(mc.ensemble == 1)
+    {
+        sprintf(restart_command,"fix nf all npt temp %.1f %.1f 0.1 iso 0.0 0.0 1.0",mc.temp,mc.temp);
+    }else
+    {
+        sprintf(restart_command,"fix nf all nvt temp %.1f %.1f 0.1",mc.temp,mc.temp);
+    }
     lmp->input->one(restart_command);
 
     lmp->input->one("compute calcPE all pe");

@@ -14,6 +14,7 @@ class MCVars {
         //int Ncum;
         bool isRestart;
         int irestart;
+        int ensemble; // nvt=0, npt=1. This should be replaced to enum description in the future
         int split_str(char str[],char **dcp);
     public:
         MCVars();
@@ -52,9 +53,10 @@ MCVars::MCVars()
     Ncum=0;
     nMDinit = 1000;
     nMDmc = 500;
-    irestart = 0;
-    isRestart = false;
-    nrestart = 0;
+    irestart = 0; // not restart run by default
+    isRestart = false; // not restart run by default
+    nrestart = 0; // no restart output by default
+    ensemble = 0; // nvt by default
     str = new char[BUFSIZ];
 
     dbfile = new char[BUFSIZ];
@@ -110,6 +112,14 @@ void MCVars::read_ctl(char* ctlfile)
         if(strstr(str,"NMD1") !=NULL) sscanf(str,"%*s %*s %d", &nMDmc);
         if(strstr(str,"IRST") !=NULL) sscanf(str,"%*s %*s %d", &irestart);
         if(strstr(str,"NRST") !=NULL) sscanf(str,"%*s %*s %d", &nrestart);
+
+        if(strstr(str,"ENS")!=NULL && strstr(str,"NVT")!=NULL)
+        {
+            ensemble=0;
+        }else if(strstr(str,"ENS")!=NULL && strstr(str,"NPT")!=NULL)
+        {
+            ensemble=1;
+        }
 
 //        if(strstr(str,"element") !=NULL) sscanf(str,"%s",mod2);
         if(strstr(str,"element") !=NULL) memcpy(mod2,str,BUFSIZ);
