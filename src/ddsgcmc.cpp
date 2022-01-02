@@ -69,6 +69,12 @@ fprintf(stderr,"Database loaded\n");
         fprintf(stdout,"### Rejection limit = %d cycles\n",mc.rej_limit);
         fprintf(stdout,"### Boltzmann factor = %g\n",mc.beta);
         fprintf(stdout,"###########################################\n");
+
+        if(mc.LCOout)
+        {
+            mc.gen_LCOscr();
+            fprintf(stdout,"# LCO.mod was generated.\n");
+        }
     }
 
 
@@ -129,7 +135,7 @@ fprintf(stderr,"Database loaded\n");
     lammps_file(lmp,infile);
     fprintf(stderr,"%d(%d@%d)>>>preprocess settings done\n",me,me_lammps,instance);
 
-
+    if(mc.LCOout) lmp->input->one("include 'LCO.mod'");
 
 
 

@@ -15,7 +15,11 @@ class MCVars {
         bool isRestart;
         int irestart;
         int ensemble; // nvt=0, npt=1. This should be replaced to enum description in the future
+        int ncomb;
+        bool LCOout;
+        int iLCO;
         int split_str(char str[],char **dcp);
+        void gen_LCOscr();
     public:
         MCVars();
         ~MCVars();
@@ -58,6 +62,9 @@ MCVars::MCVars()
     nrestart = 0; // no restart output by default
     ensemble = 0; // nvt by default
     str = new char[BUFSIZ];
+
+    iLCO = 0;
+    LCOout = false;
 
     dbfile = new char[BUFSIZ];
     Ecum=NULL;
@@ -121,6 +128,8 @@ void MCVars::read_ctl(char* ctlfile)
             ensemble=1;
         }
 
+        if(strstr(str,"LCO") !=NULL) sscanf(str,"%*s %*s %d", &iLCO);
+
 //        if(strstr(str,"element") !=NULL) sscanf(str,"%s",mod2);
         if(strstr(str,"element") !=NULL) memcpy(mod2,str,BUFSIZ);
     }
@@ -182,6 +191,11 @@ void MCVars::read_ctl(char* ctlfile)
     }else{
         isRestart = false;
         fprintf(stderr,"Notice: Restart flag is set to FALSE.\n");
+    }
+
+    if(iLCO!=0){
+        LCOout = true;
+        fprintf(stderr,"Notice: Local Chemical Ordering will be calculated.\n");
     }
 
     // set solute concentration
@@ -300,6 +314,46 @@ int MCVars::split_str(char str[], char **iargv){
 	delete [] dummy;
 
 	return tc;
+}
+
+void MCVars::gen_LCOscr()
+{
+    FILE *fp=fopen("LCO.mod","w");
+    if(fp==NULL)
+    {
+        sprintf(str,"LCO.mod can not writable");
+        throw str;
+    }
+    fprintf(fp,"compute P all rdf 1 ");
+    for(int i=0;i<ntype;i++)
+    {
+        for(int j=i;j<ntype;j++)
+        {
+            fprintf(fp,"%d %d ",i+1,j+1);
+        }
+    }
+    fprintf(fp,"cutoff %f\n",cutoff);
+
+    fprintf(fp,"compute_modify P dynamic yes\n");
+    for(int i=0;i<ntype;i++) fprintf(fp,"variable isType%d atom \"type==%d\"\n",i+1,i+1);
+    for(int i=0;i<ntype;i++) fprintf(fp,"group e%d dynamic all var isType%d every 1\n",i+1,i+1);
+    for(int i=0;i<ntype;i++) fprintf(fp,"variable c%d equal count(e%d)/count(all)\n",i+1,i+1);
+    // W-C ordering parameter definition here
+    int n=3;
+    // count for LCO variable output
+    ncomb=0;
+    for(int i=0;i<ntype;i++)
+    {
+        for(int j=i;j<ntype;j++)
+        {
+            double delta = i==j ? 1.0 : 0.0;
+            fprintf(fp,"variable a%d%d equal (c_P[1][%d]/12.0-v_c%d)/(%.1f-v_c%d)\n",i+1,j+1,n,i+1,delta,i+1);
+            n+=2;
+            ++ncomb;
+        }
+    }
+
+    fclose(fp);
 }
 
 #endif
