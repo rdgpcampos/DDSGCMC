@@ -102,6 +102,31 @@ fprintf(stderr,"Database loaded\n");
             MPI_Finalize();
             return EXIT_FAILURE;
         }
+
+        // LCO output
+        if(mc.LCOout)
+        {
+            try{
+                if((fp=fopen("log.LCO","w"))==NULL) throw 2;
+                fprintf(fp,"#   MC_Step  ");
+                for(int i=0;i<mc.ntype;++i)
+                {
+                    for(int j=i;j<mc.ntype;++j)
+                    {
+                        fprintf(fp,"     a%d%d    ",i+1,j+1);
+                    }
+                }
+                fprintf(fp,"\n");
+                fclose(fp);
+                fp=NULL;
+            }catch(int e)
+            {
+                fprintf(stderr,"Error in log.LCO(header)\n");
+                MPI_Finalize();
+                return EXIT_FAILURE;
+            }
+        }
+
     }
 
     // create one communicator per instance each with P/N procs
@@ -420,6 +445,37 @@ fprintf(stderr,"Database loaded\n");
                     break;
                 }
 	        }
+
+            if(mc.LCOout && me==0 && cnt%10==0)
+            {
+                FILE *fp;
+                try
+                {
+                    if((fp=fopen("log.LCO","a"))==NULL) throw 1;
+                    fprintf(fp,"%8d",cnt);
+                    for(int i=0;i<mc.ntype;++i)
+                    {
+                        for(int j=i;j<mc.ntype;++j)
+                        {
+                            char *alpha;
+                            sprintf(alpha,"a%d%d",i+1,j+1);
+                            ptr = (double *) lammps_extract_variable(lmp,alpha,0,0);
+                            double a_ij = *ptr;
+                            ptr = NULL;
+                            fprintf(fp,"%12.4f",a_ij);
+                        }
+                    }
+                    fprintf(fp,"\n");
+                    fclose(fp);
+                    fp = NULL;
+                }
+                catch(int e)
+                {
+                    fprintf(stderr,"Error in log.LCO\n");
+                    break;
+                }   
+            }
+
         }	
     } // for n
 
