@@ -13,7 +13,9 @@ needs to be included in the ./ddsgcmc directory (See the README file in the same
 
 These scripts were tested with the stable 12th of December of 2018 version of LAMMPS. Before using them, modify the path to
 the LAMMPS src files in source/Makefile (INC_PATH and LIB_PATH). It is also necessary to modify the same path in the run.sh scripts
-in /ddsgcmc/dd_sgcmc and /ddsgcmc/energy_sampling before running either of these calculations.
+in /ddsgcmc/dd_sgcmc and /ddsgcmc/energy_sampling before running either of these calculations. 
+
+Note that LAMMPS must be built as a shared library when using this method.
 
 Contact the authors for more information or comments regarding this method:
 
