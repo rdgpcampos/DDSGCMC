@@ -321,7 +321,7 @@ void MCVars::gen_LCOscr()
     FILE *fp=fopen("LCO.mod","w");
     if(fp==NULL)
     {
-        sprintf(str,"LCO.mod can not writable");
+        sprintf(str,"LCO.mod is not writable");
         throw str;
     }
     fprintf(fp,"compute P all rdf 1 ");
